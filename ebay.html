@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Gordon eBay</title>
+<style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:640px;margin:48px auto;padding:0 16px;line-height:1.55;color:#1b2333;background:#fff}
+code{display:block;word-break:break-all;background:#f1f3f7;padding:12px;border-radius:6px;font-size:13px}
+button{margin-top:12px;padding:8px 16px;font-size:15px;cursor:pointer}.err{color:#b3261e}</style>
+</head><body>
+<h1>Gordon e eBay</h1>
+<div id="out"><p>Questa pagina riceve il codice di autorizzazione dopo il login su eBay.</p></div>
+<p style="color:#667;font-size:13px">Il codice resta nel tuo browser: questa pagina non lo invia da nessuna parte. Scade in 5 minuti e si usa una volta sola.</p>
+<script>
+const q = new URLSearchParams(location.search), out = document.getElementById("out");
+const code = q.get("code");
+if (code) {
+  const cmd = "D:/AI/Gordon/.venv/Scripts/python.exe -X utf8 D:/AI/Gordon/mcp/ebay_auth.py '" + code + "'";
+  out.innerHTML = "<p><b>Autorizzazione concessa.</b> Copia il comando e incollalo nella chat di Claude preceduto da <b>!</b>, entro 5 minuti.</p><code id='c'></code><button id='b'>Copia</button>";
+  document.getElementById("c").textContent = cmd;
+  document.getElementById("b").onclick = () => navigator.clipboard.writeText(cmd).then(() => document.getElementById("b").textContent = "Copiato");
+  history.replaceState(null, "", location.pathname);
+} else if (q.has("rifiutato") || q.get("error")) {
+  out.innerHTML = "<p class='err'><b>Autorizzazione non concessa.</b> Nessun accesso è stato dato a Gordon.</p>";
+}
+</script>
+</body></html>
